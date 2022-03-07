@@ -6,7 +6,7 @@
       dark
     >
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
-      <site-title :title="title"></site-title>
+      <site-title :title="site.title"></site-title>
       <v-btn icon @click="save"><v-icon>mdi-check</v-icon></v-btn>
       <v-btn icon @click="read"><v-icon>mdi-numeric</v-icon></v-btn>
       <v-btn icon @click="readOne"></v-btn>
@@ -18,7 +18,7 @@
     <v-content>
       <router-view/>
     </v-content>
-    <site-footer :footer="footer"></site-footer>
+    <site-footer :footer="site.footer"></site-footer>
 
   </v-app>
 </template>
@@ -35,25 +35,37 @@ export default {
   data () {
     return {
       drawer: false,
-      title: '나의 타이틀입니다.',
-      footer: '푸터입니다.'
+      site: {
+        title: '',
+        footer: ''
+      }
     }
   },
-  mounted () {
-    console.log(this.$firebase)
+  created () {
+    this.subscribe()
   },
   methods: {
-    save () {
-      console.log('save@@@')
+    subscribe () {
       const db = getDatabase()
-      set(ref(db, 'abcd'), {
-        title: 'abcd',
-        text: 'tttt'
+      const starCountRef = ref(db, 'site')
+      onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val()
+        this.site = data
+      }, (e) => {
+        console.log(e.message)
+      })
+    },
+    save () {
+      const db = getDatabase()
+      set(ref(db, 'site'), {
+        title: 'Title',
+        text: 'Text',
+        footer: 'Footer'
       })
     },
     read () {
       const db = getDatabase()
-      const starCountRef = ref(db, 'abcd')
+      const starCountRef = ref(db, 'site')
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
         console.log(data)
@@ -61,7 +73,7 @@ export default {
     },
     readOne () {
       const dbRef = ref(getDatabase())
-      get(child(dbRef, 'abcd')).then((snapshot) => {
+      get(child(dbRef, 'site')).then((snapshot) => {
         if (snapshot.exists()) {
           console.log(snapshot.val())
         } else {
