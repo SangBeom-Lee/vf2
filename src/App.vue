@@ -12,7 +12,7 @@
       <v-btn icon @click="readOne"></v-btn>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer">
-      <site-menu></site-menu>
+      <site-menu :items="site.items"></site-menu>
     </v-navigation-drawer>
 
     <v-content>
@@ -36,23 +36,7 @@ export default {
     return {
       drawer: false,
       site: {
-        menus: [
-          {
-            title: 'Home',
-            icon: 'mdi-home',
-            active: true,
-            subitems: [
-              {
-                title: 'Dashboard',
-                to: '/'
-              },
-              {
-                title: 'About',
-                to: '/about'
-              }
-            ]
-          }
-        ],
+        items: [],
         title: '',
         footer: ''
       }
@@ -72,7 +56,24 @@ export default {
         } else {
           set(ref(db, 'site'), {
             title: 'Title',
-            footer: 'Footer'
+            footer: 'Footer',
+            items: [
+              {
+                title: 'Home',
+                icon: 'mdi-home',
+                active: true,
+                subitems: [
+                  {
+                    title: 'Dashboard',
+                    to: '/'
+                  },
+                  {
+                    title: 'About',
+                    to: '/about'
+                  }
+                ]
+              }
+            ]
           })
           this.site.title = 'Title'
           this.site.footer = 'Footer'

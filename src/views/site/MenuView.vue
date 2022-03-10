@@ -13,20 +13,20 @@
     <v-divider></v-divider>
     <v-list>
       <v-list-group
-        v-for="(item, i) in menus"
+        v-for="(menu, i) in menus"
         :key="i"
-        v-model="item.active"
-        :prepend-icon="item.icon"
+        v-model="menu.active"
+        :prepend-icon="menu.icon"
         no-action
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
+            <v-list-item-title v-text="menu.title"></v-list-item-title>
           </v-list-item-content>
         </template>
 
         <v-list-item
-          v-for="subitem in item.subitems"
+          v-for="subitem in menu.subitems"
           :key="subitem.title"
           :to="subitem.to"
         >
@@ -40,9 +40,10 @@
 </template>
 <script>
 export default {
-  props: ['menus'],
+  props: ['items'],
   data () {
     return {
+      menus: this.items
     }
   }
 }
