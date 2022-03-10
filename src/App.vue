@@ -36,6 +36,23 @@ export default {
     return {
       drawer: false,
       site: {
+        menus: [
+          {
+            title: 'Home',
+            icon: 'mdi-home',
+            active: true,
+            subitems: [
+              {
+                title: 'Dashboard',
+                to: '/'
+              },
+              {
+                title: 'About',
+                to: '/about'
+              }
+            ]
+          }
+        ],
         title: '',
         footer: ''
       }
@@ -50,7 +67,16 @@ export default {
       const starCountRef = ref(db, 'site')
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
-        this.site = data
+        if (data) {
+          this.site = data
+        } else {
+          set(ref(db, 'site'), {
+            title: 'Title',
+            footer: 'Footer'
+          })
+          this.site.title = 'Title'
+          this.site.footer = 'Footer'
+        }
       }, (e) => {
         console.log(e.message)
       })

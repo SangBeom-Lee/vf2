@@ -13,7 +13,7 @@
     <v-divider></v-divider>
     <v-list>
       <v-list-group
-        v-for="(item, i) in items"
+        v-for="(item, i) in menus"
         :key="i"
         v-model="item.active"
         :prepend-icon="item.icon"
@@ -40,26 +40,9 @@
 </template>
 <script>
 export default {
-  props: ['footer'],
+  props: ['menus'],
   data () {
     return {
-      items: [
-        {
-          title: 'Home',
-          icon: 'mdi-home',
-          active: true,
-          subitems: [
-            {
-              title: 'Dashboard',
-              to: '/'
-            },
-            {
-              title: 'About',
-              to: '/about'
-            }
-          ]
-        }
-      ]
     }
   }
 }

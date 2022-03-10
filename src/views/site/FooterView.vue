@@ -33,13 +33,9 @@ export default {
     save () {
       try {
         const db = getDatabase()
-        const data = {
+        update(ref(db, '/site/'), {
           footer: this.text
-        }
-        const updates = {}
-        updates['/site/'] = data
-        console.log(updates)
-        update(ref(db), updates)
+        })
       } catch (e) {
         console.log(e.message)
       } finally {
