@@ -11,7 +11,7 @@
       <v-btn icon @click="read"><v-icon>mdi-numeric</v-icon></v-btn>
       <v-btn icon @click="readOne"></v-btn>
     </v-app-bar>
-    <v-navigation-drawer app v-model="drawer">
+    <v-navigation-drawer app v-model="drawer" width="400">
       <site-menu :items="site.items"></site-menu>
     </v-navigation-drawer>
 
