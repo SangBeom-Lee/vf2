@@ -36,8 +36,6 @@ export default {
         update(ref(db, '/site/'), {
           footer: this.text
         })
-      } catch (e) {
-        console.log(e.message)
       } finally {
         this.dialog = false
       }
