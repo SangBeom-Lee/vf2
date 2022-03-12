@@ -21,10 +21,16 @@
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title v-text="menu.title"></v-list-item-title>
+            <v-list-item-title>
+              {{ menu.title }}
+              <span>
+                <v-btn @click="openDialogItem(i)" icon><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn icon @click="moveItem(menus, i, -1)" v-if="i > 0"><v-icon>mdi-chevron-double-up</v-icon></v-btn>
+                <v-btn icon @click="moveItem(menus, i, 1)" v-if="i < items.length - 1"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+              </span>
+            </v-list-item-title>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn @click="openDialogItem(i)" icon><v-icon>mdi-pencil</v-icon></v-btn>
           </v-list-item-action>
         </template>
 
@@ -34,11 +40,15 @@
           :to="subitem.to"
         >
           <v-list-item-content>
-            <v-list-item-title v-text="subitem.title"></v-list-item-title>
+            <v-list-item-title>
+              {{ subitem.title }}
+              <span>
+                <v-btn @click="openDialogSubItem(i, j)" icon><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn icon @click="moveItem(menu.subitems, j, -1)" v-if="j > 0"><v-icon>mdi-chevron-double-up</v-icon></v-btn>
+                <v-btn icon @click="moveItem(menu.subitems, j, 1)" v-if="j < menu.subitems.length - 1"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+              </span>
+            </v-list-item-title>
           </v-list-item-content>
-          <v-list-item-action>
-            <v-btn @click="openDialogSubItem(i, j)" icon><v-icon>mdi-pencil</v-icon></v-btn>
-          </v-list-item-action>
         </v-list-item>
         <v-list-item @click="openDialogSubItem(i,-1)">
           <v-list-item-icon>
@@ -173,6 +183,12 @@ export default {
         this.menus[this.selectedItemIdx].subitems[this.selectedSubItemIdx].title = this.formSubItem.title
         this.menus[this.selectedItemIdx].subitems[this.selectedSubItemIdx].to = this.formSubItem.to
       }
+      this.save()
+    },
+    // 메뉴 위로 이동
+    moveItem (menus, i, arrow) {
+      const menu = menus.splice(i, 1)[0]
+      menus.splice(i + arrow, 0, menu)
       this.save()
     }
   }
