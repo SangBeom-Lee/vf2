@@ -46,11 +46,13 @@ export default {
     this.subscribe()
   },
   methods: {
+    // 최초메뉴 불러오기
     subscribe () {
       const db = getDatabase()
       const starCountRef = ref(db, 'site')
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
+        console.log(data)
         if (data) {
           this.site = data
         } else {
