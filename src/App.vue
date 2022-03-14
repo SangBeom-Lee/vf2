@@ -7,9 +7,8 @@
     >
       <v-app-bar-nav-icon @click="drawer = !drawer"/>
       <site-title :title="site.title"></site-title>
-      <v-btn icon @click="save"><v-icon>mdi-check</v-icon></v-btn>
-      <v-btn icon @click="read"><v-icon>mdi-numeric</v-icon></v-btn>
-      <v-btn icon @click="readOne"></v-btn>
+      <v-spacer/>
+      <site-sign></site-sign>
     </v-app-bar>
     <v-navigation-drawer app v-model="drawer" width="400">
       <site-menu :items="site.items"></site-menu>
@@ -27,10 +26,11 @@
 import SiteTitle from '@/views/site/TitleView'
 import SiteFooter from '@/views/site/FooterView'
 import SiteMenu from '@/views/site/MenuView'
+import SiteSign from '@/views/site/SignView'
 import { getDatabase, ref, set, onValue, get, child } from 'firebase/database'
 
 export default {
-  components: { SiteTitle, SiteFooter, SiteMenu },
+  components: { SiteTitle, SiteFooter, SiteMenu, SiteSign },
   name: 'App',
   data () {
     return {
@@ -52,7 +52,6 @@ export default {
       const starCountRef = ref(db, 'site')
       onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
-        console.log(data)
         if (data) {
           this.site = data
         } else {
