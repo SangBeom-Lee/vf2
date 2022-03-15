@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     // 최초메뉴 불러오기
-    subscribe () {
+    async subscribe () {
       const db = getDatabase()
       const starCountRef = ref(db, 'site')
       onValue(starCountRef, (snapshot) => {

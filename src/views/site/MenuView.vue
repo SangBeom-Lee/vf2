@@ -27,6 +27,7 @@
                 <v-btn @click="openDialogItem(i)" icon><v-icon>mdi-pencil</v-icon></v-btn>
                 <v-btn icon @click="moveItem(menus, i, -1)" v-if="i > 0"><v-icon>mdi-chevron-double-up</v-icon></v-btn>
                 <v-btn icon @click="moveItem(menus, i, 1)" v-if="i < items.length - 1"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+                <v-btn icon @click="deleteItem(menus, i)"><v-icon>mdi-delete</v-icon></v-btn>
               </span>
             </v-list-item-title>
           </v-list-item-content>
@@ -46,6 +47,7 @@
                 <v-btn @click="openDialogSubItem(i, j)" icon><v-icon>mdi-pencil</v-icon></v-btn>
                 <v-btn icon @click="moveItem(menu.subitems, j, -1)" v-if="j > 0"><v-icon>mdi-chevron-double-up</v-icon></v-btn>
                 <v-btn icon @click="moveItem(menu.subitems, j, 1)" v-if="j < menu.subitems.length - 1"><v-icon>mdi-chevron-double-down</v-icon></v-btn>
+                <v-btn icon @click="deleteItem(menu.subitems, j)"><v-icon>mdi-delete</v-icon></v-btn>
               </span>
             </v-list-item-title>
           </v-list-item-content>
@@ -189,6 +191,11 @@ export default {
     moveItem (menus, i, arrow) {
       const menu = menus.splice(i, 1)[0]
       menus.splice(i + arrow, 0, menu)
+      this.save()
+    },
+    // 삭제
+    deleteItem (menus, i) {
+      menus.splice(i, 1)
       this.save()
     }
   }

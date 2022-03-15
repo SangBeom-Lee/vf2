@@ -15,7 +15,8 @@ exports.createUser = functions.auth.user().onCreate(async (user) => {
     email,
     displayName,
     photoURL,
-    createdAt: new Date()
+    createdAt: new Date().getMilliseconds(),
+    level: email === functions.config().admin.email ? 100 : 5
   }
   db.ref('users').child(uid).set(mem)
 })
