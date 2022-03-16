@@ -50,7 +50,7 @@ export default {
     async subscribe () {
       const db = getDatabase()
       const starCountRef = ref(db, 'site')
-      onValue(starCountRef, (snapshot) => {
+      await onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
         if (data) {
           this.site = data
