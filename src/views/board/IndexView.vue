@@ -11,7 +11,6 @@
       </template>
     </v-data-table>
     <v-card-actions>
-      <v-btn @click="read"><v-icon left>mdi-page-next</v-icon></v-btn>
       <v-btn @click="openDialog(null)"><v-icon left>mdi-pencil</v-icon></v-btn>
     </v-card-actions>
     <v-dialog max-width="500" v-model="dialog">
@@ -32,7 +31,7 @@
   </v-card>
 </template>
 <script>
-import { collection, addDoc, getFirestore, getDocs, updateDoc, doc, deleteDoc } from 'firebase/firestore'
+import { collection, addDoc, getFirestore, updateDoc, doc, deleteDoc, onSnapshot, query } from 'firebase/firestore'
 export default {
   data () {
     return {
@@ -47,13 +46,36 @@ export default {
         content: ''
       },
       dialog: false,
-      selectedItem: null
+      selectedItem: null,
+      unsubscribe: null,
+      db: null
     }
   },
   created () {
-    this.read()
+    // this.read()
+    this.db = getFirestore()
+    this.subscribe()
+  },
+  destroyed () {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
   },
   methods: {
+    async subscribe () {
+      const q = query(collection(this.db, 'board'))
+      this.unsubscribe = onSnapshot(q, (sn) => {
+        console.log(11)
+        this.items = sn.docs.map((v) => {
+          const item = v.data()
+          return {
+            id: v.id,
+            title: item.title,
+            content: item.content
+          }
+        })
+      })
+    },
     openDialog (item) {
       if (!item) {
         this.form.title = ''
@@ -76,19 +98,6 @@ export default {
       const row = doc(db, 'board', this.selectedItem.id)
       await updateDoc(row, this.form)
       this.dialog = false
-    },
-    async read () {
-      const db = getFirestore()
-      const sn = await getDocs(collection(db, 'board'))
-      sn.docs.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`)
-      })
-      this.items = sn.docs.map(v => {
-        const item = v.data()
-        return {
-          id: v.id, title: item.title, content: item.content
-        }
-      })
     },
     async remove (item) {
       const db = getFirestore()
