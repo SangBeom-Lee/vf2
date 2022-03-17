@@ -106,6 +106,7 @@ import { getDatabase, ref, update } from 'firebase/database'
 export default {
   props: ['items'],
   data () {
+    console.log(this.items)
     return {
       menus: this.items,
       dialogItem: false,
