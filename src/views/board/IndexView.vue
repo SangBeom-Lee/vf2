@@ -5,6 +5,8 @@
       :headers="headers"
       :items="items"
       :items-per-page="5"
+      :options="options"
+      :server-items-length="serverItemsLength"
     >
       <template v-slot:[`item.id`]="{ item }">
         <v-btn icon @click="openDialog(item)"><v-icon icon>mdi-pencil</v-icon></v-btn>
@@ -32,13 +34,16 @@
   </v-card>
 </template>
 <script>
-import { collection, addDoc, getFirestore, updateDoc, doc, deleteDoc, onSnapshot, query } from 'firebase/firestore'
+import { collection, addDoc, getFirestore, updateDoc, doc, deleteDoc, onSnapshot, query, limit } from 'firebase/firestore'
+import { head, last } from 'lodash'
+
 export default {
   data () {
     return {
       headers: [
         { value: 'title', text: '제목' },
         { value: 'content', text: '내용' },
+        { value: 'createdAt', text: '작성일' },
         { value: 'id', id: 'id' }
       ],
       items: [],
@@ -49,7 +54,21 @@ export default {
       dialog: false,
       selectedItem: null,
       unsubscribe: null,
+      unsubscribeCount: null,
+      serverItemsLength: 0,
+      options: {},
+      docs: [],
       db: null
+    }
+  },
+  watch: {
+    options: {
+      handler (n, o) {
+        console.log(o)
+        console.log(n)
+        this.unsubscribe()
+      },
+      deep: true
     }
   },
   created () {
@@ -64,15 +83,21 @@ export default {
   },
   methods: {
     async subscribe () {
-      const q = query(collection(this.db, 'board'))
+      const q = query(collection(this.db, 'board'), limit(this.options.itemsPerPage))
+      this.unsubscribeCount = onSnapshot(doc(this.db, 'meta', 'boards'), (me) => {
+        this.serverItemsLength = me.data().count
+      })
       this.unsubscribe = onSnapshot(q, (sn) => {
-        console.log(11)
+        this.docs = sn.docs
+        console.log(head(sn.docs).data())
+        console.log(last(sn.docs).data())
         this.items = sn.docs.map((v) => {
           const item = v.data()
           return {
             id: v.id,
             title: item.title,
-            content: item.content
+            content: item.content,
+            createdAt: item.createdAt
           }
         })
       })
@@ -89,20 +114,22 @@ export default {
       this.dialog = true
     },
     async save () {
-      const db = getFirestore()
-      await addDoc(collection(db, 'board'), this.form)
+      const item = {
+        createdAt: this.$getNowDate(),
+        title: this.form.title,
+        content: this.form.content
+      }
+      await addDoc(collection(this.db, 'board'), item)
 
       this.dialog = false
     },
     async update () {
-      const db = getFirestore()
-      const row = doc(db, 'board', this.selectedItem.id)
+      const row = doc(this.db, 'board', this.selectedItem.id)
       await updateDoc(row, this.form)
       this.dialog = false
     },
     async remove (item) {
-      const db = getFirestore()
-      await deleteDoc(doc(db, 'board', item.id))
+      await deleteDoc(doc(this.db, 'board', item.id))
     }
   }
 }

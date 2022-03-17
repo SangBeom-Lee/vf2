@@ -52,7 +52,6 @@ export default {
       const starCountRef = ref(db, 'site')
       await onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
-        console.log(data)
         if (data) {
           this.site = data
         } else {

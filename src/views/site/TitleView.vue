@@ -20,6 +20,7 @@ import { getDatabase, ref, update } from 'firebase/database'
 export default {
   props: ['title'],
   data () {
+    console.log(this.items)
     return {
       dialog: false,
       text: this.title
