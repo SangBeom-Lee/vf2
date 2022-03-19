@@ -48,8 +48,8 @@ export default {
   methods: {
     // 최초메뉴 불러오기
     async subscribe () {
-      const db = getDatabase()
-      const starCountRef = ref(db, 'site')
+      const db = await getDatabase()
+      const starCountRef = await ref(db, 'site')
       await onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
         if (data) {

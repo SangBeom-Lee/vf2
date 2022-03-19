@@ -101,12 +101,11 @@
   </div>
 </template>
 <script>
-import { getDatabase, ref, update } from 'firebase/database'
+import { getDatabase, ref, onValue, update } from 'firebase/database'
 
 export default {
   props: ['items'],
   data () {
-    console.log(this.items)
     return {
       menus: this.items,
       dialogItem: false,
@@ -123,7 +122,23 @@ export default {
       selectedSubItemIdx: -1
     }
   },
+  created () {
+
+  },
   methods: {
+    async subscribe () {
+      const db = await getDatabase()
+      const starCountRef = await ref(db, 'site')
+
+      await onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val()
+        if (data) {
+          this.menus = data.item
+        }
+      }, (e) => {
+        console.log(e.message)
+      })
+    },
     // 메뉴 Dialog 창
     openDialogItem (idx) {
       this.selectedItemIdx = idx

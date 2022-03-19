@@ -83,10 +83,10 @@ export default {
   },
   methods: {
     async subscribe () {
-      const q = query(collection(this.db, 'board'), limit(this.options.itemsPerPage))
       this.unsubscribeCount = onSnapshot(doc(this.db, 'meta', 'boards'), (me) => {
         this.serverItemsLength = me.data().count
       })
+      const q = query(collection(this.db, 'board'), limit(this.options.itemsPerPage))
       this.unsubscribe = onSnapshot(q, (sn) => {
         this.docs = sn.docs
         console.log(head(sn.docs).data())
