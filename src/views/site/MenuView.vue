@@ -101,12 +101,11 @@
   </div>
 </template>
 <script>
-import { getDatabase, ref, update } from 'firebase/database'
+import { getDatabase, ref, update, get, child } from 'firebase/database'
 
 export default {
   props: ['items'],
   data () {
-    console.log(this.items)
     return {
       menus: this.items,
       dialogItem: false,
@@ -121,6 +120,18 @@ export default {
       },
       selectedItemIdx: -1,
       selectedSubItemIdx: -1
+    }
+  },
+  created () {
+    if (this.menus.length < 1) {
+      const db = getDatabase()
+      const starCountRef = ref(db)
+      get(child(starCountRef, 'site')).then((snapshot) => {
+        const items = snapshot.val().items
+        this.menus = items
+      }).catch((error) => {
+        console.error(error)
+      })
     }
   },
   methods: {

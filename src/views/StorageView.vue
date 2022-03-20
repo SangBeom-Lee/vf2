@@ -1,6 +1,6 @@
 <template>
   <v-sheet>
-      <a-button type="primary" width="200px">
+      <v-btn type="primary" width="200px">
             이미지 업로드
             <input
               class="imginput"
@@ -8,7 +8,7 @@
               accept="image/jpeg, image/jpg"
               @change="getImgPath"
             />
-          </a-button>
+          </v-btn>
       <v-btn @click="write">write</v-btn>
   </v-sheet>
 </template>

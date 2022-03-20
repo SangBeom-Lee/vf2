@@ -12,7 +12,6 @@ const auth = getAuth()
 onAuthStateChanged(auth, (user) => {
   if (user) {
     store.commit('setFireUser', user)
-    console.log(user)
   } else {
     // User is signed out
     // ...
