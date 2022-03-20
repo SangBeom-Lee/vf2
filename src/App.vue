@@ -39,23 +39,25 @@ export default {
         items: [],
         title: '',
         footer: ''
-      }
+      },
+      db: null
     }
   },
   created () {
+    this.db = getDatabase()
     this.subscribe()
   },
   methods: {
     // 최초메뉴 불러오기
-    async subscribe () {
-      const db = await getDatabase()
-      const starCountRef = await ref(db, 'site')
-      await onValue(starCountRef, (snapshot) => {
+    subscribe () {
+      const starCountRef = ref(this.db, 'site')
+      onValue(starCountRef, (snapshot) => {
         const data = snapshot.val()
         if (data) {
           this.site = data
+          console.log(this.site)
         } else {
-          set(ref(db, 'site'), {
+          set(ref(this.db, 'site'), {
             title: 'Title',
             footer: 'Footer',
             items: [

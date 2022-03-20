@@ -22,6 +22,11 @@ const routes = [
     path: '/board',
     name: 'board',
     component: () => import('../views/board/IndexView.vue')
+  },
+  {
+    path: '/storage',
+    name: 'storage',
+    component: () => import('../views/StorageView.vue')
   }
 ]
 
