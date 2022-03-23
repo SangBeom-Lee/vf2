@@ -32,6 +32,16 @@ const routes = [
     path: '/editor',
     name: 'editor',
     component: () => import('../views/EditorView.vue')
+  },
+  {
+    path: '/:collection/:document',
+    name: 'collection-document',
+    component: () => import('../views/RenderView.vue')
+  },
+  {
+    path: '*',
+    name: 'error',
+    component: () => import('../views/ErrorView.vue')
   }
 ]
 
