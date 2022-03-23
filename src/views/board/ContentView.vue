@@ -1,8 +1,55 @@
 <template>
-  <v-card>Board Content</v-card>
+  <v-container>
+    <v-card>
+      <v-toolbar color="accent" dense falt dark>
+        <v-toolbar-title v-text="info.title"></v-toolbar-title>
+        <v-spacer/>
+        <v-btn v-icon @click="write"><v-icon>mdi-pencil</v-icon></v-btn>
+      </v-toolbar>
+      <v-card-text v-if="info.createdAt">
+        <v-alert color="info" outlined dismissible>
+          <div style="white-space: pre-line">{{ info.description }}</div>
+          <div class="text-right font-italic caption">{{ info.createdAt.toDate() }}</div>
+          <div class="text-right font-italic caption">{{ info.updatedAt.toDate() }}</div>
+        </v-alert>
+      </v-card-text>
+      <v-card-text>
+        articles
+      </v-card-text>
+    </v-card>
+  </v-container>
 </template>
 <script>
+import { getFirestore, onSnapshot, doc } from 'firebase/firestore'
 export default {
-  props: ['document']
+  props: ['document'],
+  data () {
+    return {
+      unsubscribe: null,
+      info: {
+        category: '',
+        title: '',
+        description: ''
+      },
+      loading: false,
+      db: null
+    }
+  },
+  created () {
+    this.db = getFirestore()
+    this.subscribe()
+  },
+  methods: {
+    subscribe () {
+      if (this.unsubscribe) this.unsubscribe()
+      this.unsubscribe = onSnapshot(doc(this.db, 'board', this.document), (me) => {
+        if (!me.data()) return this.write()
+        this.info = me.data()
+      })
+    },
+    write () {
+      this.$router.push(this.$route.path + '/write')
+    }
+  }
 }
 </script>

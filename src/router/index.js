@@ -39,6 +39,11 @@ const routes = [
     component: () => import('../views/RenderView.vue')
   },
   {
+    path: '/:collection/:document/:action',
+    name: 'collection-document',
+    component: () => import('../views/RenderView.vue')
+  },
+  {
     path: '*',
     name: 'error',
     component: () => import('../views/ErrorView.vue')
