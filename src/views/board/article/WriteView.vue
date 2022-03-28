@@ -3,7 +3,7 @@
     <v-form>
       <v-card :loading="loading">
         <v-toolbar color='accent' dense flat dark>
-          <v-toolbar-title>게시판 정보 작성</v-toolbar-title>
+          <v-toolbar-title>게시판 글 작성</v-toolbar-title>
           <v-spacer/>
           <v-btn v-icon @click="$router.push('/board/' + document)"><v-icon>mdi-arrow-left</v-icon></v-btn>
           <v-btn v-icon @click="save"><v-icon>mdi-content-save</v-icon></v-btn>
@@ -18,7 +18,7 @@
   </v-container>
 </template>
 <script>
-import { getFirestore, onSnapshot, doc, setDoc, updateDoc } from 'firebase/firestore'
+import { getFirestore, doc, onSnapshot } from 'firebase/firestore'
 export default {
   props: ['document', 'action'],
   data () {
@@ -35,6 +35,11 @@ export default {
       db: null
     }
   },
+  computed: {
+    articleId () {
+      return this.$route.query.articleId
+    }
+  },
   watch: {
     document () {
       this.subscribe()
@@ -46,8 +51,11 @@ export default {
   },
   methods: {
     subscribe () {
+      console.log(this.articleId)
+      if (this.articleId) return
+
       if (this.unsubscribe) this.unsubscribe()
-      this.ref = doc(this.db, 'boards', this.document)
+      this.ref = doc(this.db, 'boards', this.document, 'article')
       this.unsubscribe = onSnapshot(this.ref, (me) => {
         this.exists = me.exists
         if (this.exists) {
@@ -59,26 +67,7 @@ export default {
       })
     },
     async save () {
-      const form = {
-        category: this.form.category,
-        title: this.form.title,
-        description: this.form.description
-      }
-      this.loading = true
-      try {
-        if (this.exists) {
-          form.createdAt = new Date()
-          form.count = 0
-          await setDoc(this.ref, form)
-        } else {
-          form.updatedAt = new Date()
-          await updateDoc(this.ref, form)
-        }
-
-        this.$router.push('/board/' + this.document)
-      } catch (err) {
-        console.error(err)
-      }
+      console.log(1111)
     }
   }
 }

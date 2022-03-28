@@ -1,10 +1,11 @@
 <template>
-  <v-container>
+  <v-container fulid>
     <v-card>
       <v-toolbar color="accent" dense falt dark>
         <v-toolbar-title v-text="info.title"></v-toolbar-title>
         <v-spacer/>
         <v-btn v-icon @click="write"><v-icon>mdi-pencil</v-icon></v-btn>
+        <v-btn v-icon @click="articleWrite"><v-icon>mdi-plus</v-icon></v-btn>
       </v-toolbar>
       <v-card-text v-if="info.createdAt">
         <v-alert color="info" outlined dismissible>
@@ -55,8 +56,11 @@ export default {
         this.info = me.data()
       })
     },
-    write () {
-      this.$router.push(this.$route.path + '/write')
+    async write () {
+      this.$router.push(this.$route.path + '/config-write')
+    },
+    async articleWrite () {
+      this.$router.push({ path: this.$route.path + '/article-write', query: { articleId: 'new' } })
     }
   }
 }
