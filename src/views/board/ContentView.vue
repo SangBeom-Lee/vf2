@@ -35,14 +35,22 @@ export default {
       db: null
     }
   },
+  watch: {
+    document () {
+      this.subscribe()
+    }
+  },
   created () {
     this.db = getFirestore()
     this.subscribe()
   },
+  destroyed () {
+    if (this.unsubscribe) this.unsubscribe()
+  },
   methods: {
     subscribe () {
       if (this.unsubscribe) this.unsubscribe()
-      this.unsubscribe = onSnapshot(doc(this.db, 'board', this.document), (me) => {
+      this.unsubscribe = onSnapshot(doc(this.db, 'boards', this.document), (me) => {
         if (!me.data()) return this.write()
         this.info = me.data()
       })
