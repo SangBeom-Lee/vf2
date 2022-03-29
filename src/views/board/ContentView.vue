@@ -11,7 +11,7 @@
         <v-alert color="info" outlined dismissible>
           <div style="white-space: pre-line">{{ info.description }}</div>
           <div class="text-right font-italic caption">{{ info.createdAt.toDate() }}</div>
-          <div class="text-right font-italic caption">{{ info.updatedAt.toDate() }}</div>
+          <div v-if="info.updatedAt" class="text-right font-italic caption">{{ info.updatedAt.toDate() }}</div>
         </v-alert>
       </v-card-text>
       <v-card-text>
@@ -55,12 +55,13 @@ export default {
         if (!me.data()) return this.write()
         this.info = me.data()
       })
+      console.log(this.info)
     },
     async write () {
       this.$router.push(this.$route.path + '/config-write')
     },
     async articleWrite () {
-      this.$router.push({ path: this.$route.path + '/article-write', query: { articleId: 'new' } })
+      this.$router.push({ path: this.$route.path + '/article-write', query: { articleId: '' } })
     }
   }
 }
