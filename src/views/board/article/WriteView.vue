@@ -18,7 +18,7 @@
   </v-container>
 </template>
 <script>
-import { getFirestore, doc, onSnapshot, writeBatch, getDoc } from 'firebase/firestore'
+import { getFirestore, doc, onSnapshot, writeBatch, getDoc, collection } from 'firebase/firestore'
 export default {
   props: ['document', 'action'],
   data () {
@@ -26,9 +26,8 @@ export default {
       unsubscribe: null,
       toggle: false,
       form: {
-        category: '',
         title: '',
-        description: ''
+        content: ''
       },
       exists: false,
       loading: false,
@@ -52,24 +51,23 @@ export default {
   },
   methods: {
     subscribe () {
-      console.log(this.articleId)
       if (this.articleId) return
 
       if (this.unsubscribe) this.unsubscribe()
-      this.ref = doc(this.db, 'boards', this.document, 'articles')
+      this.ref = collection(this.db, 'boards/' + this.document, 'articles')
       this.unsubscribe = onSnapshot(this.ref, (me) => {
         this.exists = me.exists
         if (this.exists) {
           const item = me.data()
-          this.form.category = item.category
           this.form.title = item.title
-          this.form.description = item.description
+          this.form.content = item.content
         }
       })
     },
     async save () {
       this.loading = true
       try {
+        const batch = await writeBatch(this.db)
         const createdAt = new Date()
         // const id = createdAt.getTime().toString()
         const boardData = doc(this.db, 'boards', this.document)
@@ -79,24 +77,18 @@ export default {
           title: this.form.title,
           updatedAt: createdAt
         }
-        console.log(this.ref)
-        const batch = await writeBatch(this.db)
-        console.log(2222)
         if (!this.articleId) {
           data.createdAt = createdAt
           data.commentCount = 0
-          batch.set(boardData, data)
-          console.log(3333)
+          batch.set(this.ref, data)
           batch.update(boardData, { count: boardCnt + 1 })
-          console.log(4444)
         } else {
-          const articleDataRef = doc(this.db, 'boards', this.document, 'articles')
-          batch.update(articleDataRef, data)
+          batch.update(this.ref, data)
         }
         await batch.commit()
       } finally {
         this.loading = false
-        // this.$router.push({ path: this.$route.path + '/article-write' })
+        this.$router.push({ path: this.$route.path })
       }
     }
   }

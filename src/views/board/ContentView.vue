@@ -4,8 +4,8 @@
       <v-toolbar color="accent" dense falt dark>
         <v-toolbar-title v-text="info.title"></v-toolbar-title>
         <v-spacer/>
-        <v-btn v-icon @click="write"><v-icon>mdi-pencil</v-icon></v-btn>
-        <v-btn v-icon @click="articleWrite"><v-icon>mdi-plus</v-icon></v-btn>
+        <v-btn icon @click="write"><v-icon>mdi-pencil</v-icon></v-btn>
+        <v-btn icon @click="articleWrite"><v-icon>mdi-plus</v-icon></v-btn>
       </v-toolbar>
       <v-card-text v-if="info.createdAt">
         <v-alert color="info" outlined dismissible>
